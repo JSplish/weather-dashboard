@@ -7,7 +7,9 @@ function initPage() {
     const currentHumidity = document.getElementById("humidity");
     const currentUv = document.getElementById("UV-index");
     const fiveday = document.getElementById("fiveday-header");
+    const clearHistory = document.getElementById("clear-history");
     let history = JSON.parse(localStorage.getItem("search")) || [];
+
 
     // Unique API key
     const APIKey = "e7c9a6c1e200e70e07d3d9c7208425ac";
@@ -85,6 +87,13 @@ function initPage() {
         getWeather(userSearch);
         history.push(userSearch);
         localStorage.setItem("search", JSON.stringify(history));
+        displayHistory();
+    })
+
+    // Clear History
+    clearHistory.addEventListener("click", function() {
+        localStorage.clear();
+        history = [];
         displayHistory();
     })
 }
