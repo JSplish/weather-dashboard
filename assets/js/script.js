@@ -1,12 +1,13 @@
 function initPage() {
-    const cityEl = document.getElementById("enter-city");
-    const searchEl = document.getElementById("search-button")
+    const city = document.getElementById("enter-city");
+    const search = document.getElementById("search-button")
     const weatherToday = document.getElementById("today-weather");
     const currentPicture = document.getElementById("current-pic");
     const currentTemp = document.getElementById("temperature")
     const currentHumidity = document.getElementById("humidity");
     const currentUv = document.getElementById("UV-index");
     const fiveday = document.getElementById("fiveday-header");
+    let history = JSON.parse(localStorage.getItem("search")) || [];
 
     // Unique API key
     const APIKey = "e7c9a6c1e200e70e07d3d9c7208425ac";
@@ -76,6 +77,14 @@ function initPage() {
                             forecastEl[i].append(forecastDateEl);
                         }
                     })
-            })
+            });
     }
+    // local storage
+    search.addEventListener("click", function() {
+        const userSearch = city.value;
+        getWeather(userSearch);
+        history.push(userSearch);
+        localStorage.setItem("search", JSON.stringify(history));
+        displayHistory();
+    })
 }
