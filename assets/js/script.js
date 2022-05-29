@@ -6,6 +6,7 @@ function initPage() {
     const currentTemp = document.getElementById("temperature")
     const currentHumidity = document.getElementById("humidity");
     const currentUv = document.getElementById("UV-index");
+    const fiveday = document.getElementById("fiveday-header");
 
     // Unique API key
     const APIKey = "e7c9a6c1e200e70e07d3d9c7208425ac";
@@ -54,7 +55,27 @@ function initPage() {
                         currentUv.append(UVIndex);
                     });
 
+                    // 5 day forecast
+                    let cityId = res.data.id;
+                    let forecastUrl = "https://api.openweathermap.org/data/2.5/forecast?id=" + cityID + "&appid=" + APIKey;
+                    axios.get(forecastUrl)
+                    .then(function (res) {
+                        fiveday.classList.remove("d-none");
 
+                        const forecastEl = document.querySelectorAll(".forecast");
+                        for (i = 0; forecastEl.length; i++) {
+                            forecastEl[i].innerHTML = "";
+                            const forecastIndex = i * 8 + 4;
+                            const forecastDate = new Date(res.data.list[forecastIndex].dt * 1000);
+                            const forecastDay = forecastDate.getDate();
+                            const forecastMonth = forecastDate.getMonth() + 1;
+                            const forecastYear = forecastDate.getFullYear();
+                            const forecastDateEl = document.createElement("p");
+                            forecastDateEl.setAttribute("class", "mt-3 mb-0 forecast-date");
+                            forecastDateEl.innerHTML = forecastMonth + "/" + forecastDay + "/" + forecastYear;
+                            forecastEl[i].append(forecastDateEl);
+                        }
+                    })
             })
     }
 }
