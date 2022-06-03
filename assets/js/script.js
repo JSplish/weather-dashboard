@@ -4,7 +4,7 @@ function initPage() {
     const currentPicture = document.getElementById("current-pic");
     const currentTemp = document.getElementById("temperature")
     const currentHumidity = document.getElementById("humidity");
-    const currentWind = document.getElementById("wind-spped");
+    const currentWind = document.getElementById("wind-speed");
     const currentUv = document.getElementById("UV-index");
     const clearHistory = document.getElementById("clear-history");
     const historyEl = document.getElementById("history");
@@ -36,7 +36,9 @@ function initPage() {
                 currentPicture.setAttribute("alt", res.data.weather[0].description);
                 currentTemp.innerHTML = "Temperature: " + k2f(res.data.main.temp) + " &#176F";
                 currentHumidity.innerHTML = "Humidity: " + res.data.main.humidity + "%";
+                console.log(res.data.wind.speed);
                 currentWind.innerHTML = "Wind Speed: " + res.data.wind.speed + "MPH";
+                
 
                 // UV Index
                 let latitude = res.data.coord.lat;
@@ -65,21 +67,22 @@ function initPage() {
                     let cityID = res.data.id;
                     let forecastUrl = "https://api.openweathermap.org/data/2.5/forecast?id=" + cityID + "&appid=" + APIKey;
                     axios.get(forecastUrl)
-                    .then(function (res) {
+                    .then(function (response) {
                         fiveday.classList.remove("d-none");
 
                         const forecastEl = document.querySelectorAll(".forecast");
-                        for (i = 0; forecastEl.length; i++) {
-                            forecastEl[i].innerHTML = "";
-                            const forecastIndex = i * 8 + 4;
-                            const forecastDate = new Date(res.data.list[forecastIndex].dt * 1000);
+                        let forecastIndex = 0
+                        for (i = 0; i<forecastEl.length; i++) {
+                            // forecastEl[i].innerHTML = "";
+                             forecastIndex += 4
+                            const forecastDate = new Date(response.data.list[forecastIndex].dt * 1000);
                             const forecastDay = forecastDate.getDate();
                             const forecastMonth = forecastDate.getMonth() + 1;
                             const forecastYear = forecastDate.getFullYear();
                             const forecastDateEl = document.createElement("p");
                             forecastDateEl.setAttribute("class", "mt-3 mb-0 forecast-date");
-                            forecastDateEl.innerHTML = forecastMonth + "/" + forecastDay + "/" + forecastYear;
-                            forecastEl[i].append(forecastDateEl);
+                            forecastDateEl.textContent = forecastMonth + "/" + forecastDay + "/" + forecastYear;
+                            forecastEl[i].appendChild(forecastDateEl);
 
                             // Icon for current weather
                             const forecastWeather = document.createElement("img");
